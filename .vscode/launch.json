@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Test",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "unittest",
+            "justMyCode": true,
+            "args": [
+                "discover",
+                "-s",
+                "tests",
+                "-p",
+                "*_.py"
+            ],
+        },
+    ]
+}
