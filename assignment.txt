@@ -1,0 +1,71 @@
+===================  Mandatory tasks  ========================
+
+1. Create a public Git repo and share it with the recruiter.
+
+2. Setup an emulated network device for demo.
+Your program to interact with the device via Netconf and cli.
+Use a Cisco DevNet Sandbox here:
+https://devnetsandbox.cisco.com/RM/Topology
+and set up an instance of this device:
+"IOS XR Programmability"
+
+3. Write a python program to listen for REST API calls
+and translate them to NetConf/CLI interactions with the device.
+Decide the structure of the api response.
+Decide the names of the api endpoints.
+You may utilise common python packages e.g netmiko, paramiko, ncclient.
+
+3.1 Push your code:
+- Commit frequently
+- Push at least once per workday
+- Keep your commits separate to show the evolution of this code
+
+3.2 Provide api endpoints to:
+- Configure a loopback on the device via Netconf
+- Delete a loopback of a device via Netconf
+
+===================  Bonus point tasks  ========================
+
+4. Serve the app behind an httpd server e.g. apache or nginx
+
+5. Create a dockerfile to pack the httpd and api in an image
+
+6. Implement any useful CI pipeline to help maintain your code quality
+
+7. Provide endpoints to interact with the device VIA CLI THIS TIME:
+- List all interfaces on a device
+- Include loopbacks
+- Include interface status e.g up/down
+
+8. Include an optional "dry run" capability to generate a payload,
+but instead of sending it to the device,
+return the generated payload to the user.
+
+===================  Demonstration  ========================
+
+Demonstrate your working implementation.
+Run your app anywhere of your choosing.
+Use any client e.g Curl, Postman, to hit the endpoints.
+Walk us through these aspects of your code:
+- Everything utilised
+- Everything implemented
+- Any optimisations
+- Any options you considered but missing from the code
+
+===================  Expectations  ========================
+
+We are not seeking over engineered solutions.
+
+Your code should cover:
+- Exception handling
+- Test cases
+- Commenting e.g. docstrings
+- Relevant Python coding guidelines/standards
+
+Code will be scored on:
+- Readability
+- How Pythonic your code is (useful built-in funcs to simplify code)
+- Does what was requested
+- Reusability (could one easily reuse it against any other network device of the same make/model)
+- Exception Handling
+- Conformance to any REST Standards or best practices.
