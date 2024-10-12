@@ -7,6 +7,20 @@ Repository name purposefully vague since its publicly visible.
 
 # Considerations
 
+Look into YANG and device capabilities to form correct XML payloads.
+Investigate async mode for ncclient.
+Fetch config upon instantiation of a router object.
+Modify the config.
+Collision of configs:
+Config lock in IOS!
+Just before applying the new config,
+fetch again and check if it still matches the old config.
+Otherwise, think about ways to merge.
+Should we convert XML to Python dictionary for local processing?
+Provide XML filters to the API call or fetch entire config and filter locally?
+Type hinting everywhere
+Startup-config vs running-config
+
 ## Choice of library:
 
 Address those mentioned in the assignment.
