@@ -1,6 +1,7 @@
 from abc import ABC
-from ncclient import manager as NetConfClient
+from ncclient import manager as NetConfConnection
 import xml.dom.minidom as XML
+from src.decorator import with_connection
 
 
 class Device(ABC):
@@ -24,20 +25,11 @@ class Device(ABC):
         self._username = username
         self._password = password
 
-    def get_hostname(self) -> str:
-        with NetConfClient.connect(
-            host=self._url,
-            port=self._port,
-            username=self._username,
-            password=self._password,
-            hostkey_verify=False,
-            device_params={"name": "default"},
-            allow_agent=False,
-            look_for_keys=False,
-        ) as client:
-            response = client.get_config("running")
-            xml = XML.parseString(response.xml)
-            # xml_str = xml.toxml()
-            hostname_tags = xml.getElementsByTagName("hostname")
-            first_occurrence = hostname_tags[0]
-            return first_occurrence.firstChild.nodeValue
+    @with_connection
+    def get_hostname(self, connection: NetConfConnection) -> str:
+        response = connection.get_config("running")
+        xml = XML.parseString(response.xml)
+        # xml_str = xml.toxml()
+        hostname_tags = xml.getElementsByTagName("hostname")
+        first_occurrence = hostname_tags[0]
+        return first_occurrence.firstChild.nodeValue

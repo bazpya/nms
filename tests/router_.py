@@ -1,5 +1,6 @@
 from bazpy.testing.testbase import TestBase
 from src.router import Router
+from unittest import skip
 
 
 class Router_(TestBase):
