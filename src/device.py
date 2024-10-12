@@ -33,3 +33,15 @@ class Device(ABC):
         hostname_tags = xml.getElementsByTagName("hostname")
         first_occurrence = hostname_tags[0]
         return first_occurrence.firstChild.nodeValue
+
+    @with_connection
+    def dump_capabilities(self, connection: NetConfConnection) -> None:
+        with open("./sample/capabilities.txt", "w") as output_file:
+            for line in connection.server_capabilities:
+                output_file.write(f"{line}\n")
+
+    @with_connection
+    def dump_config(self, connection: NetConfConnection) -> None:
+        with open("./sample/config.xml", "w") as output_file:
+            response = connection.get_config("running")
+            output_file.write(response.xml)

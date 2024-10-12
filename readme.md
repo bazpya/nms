@@ -20,6 +20,7 @@ Should we convert XML to Python dictionary for local processing?
 Provide XML filters to the API call or fetch entire config and filter locally?
 Type hinting everywhere
 Startup-config vs running-config
+Reuse a connection for consecutive operations.
 
 ## Choice of library:
 

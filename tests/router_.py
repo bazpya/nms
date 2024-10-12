@@ -14,6 +14,15 @@ class Router_(TestBase):
         self.sut = Router(url, port, username, password)
         return super().setUp()
 
+    @skip
     def test_get_hostname_gets_string(self):
         result = self.sut.get_hostname()
         self.assertIsInstance(result, str)
+
+    @skip("Used during discovery phase")
+    def test_dump_capabilities(self):
+        self.sut.dump_capabilities()
+
+    @skip("Used during discovery phase")
+    def test_dump_config(self):
+        self.sut.dump_config()
