@@ -19,6 +19,15 @@ class Router_(TestBase):
         result = self.sut.get_hostname()
         self.assertIsInstance(result, str)
 
+    @skip
+    def test_get_capabilities_gets_list_of_str(self):
+        result = self.sut.get_capabilities()
+        self.assertAreInstances(result, str)
+
+    @skip("Used during discovery phase")
+    def test_dump_schemas(self):
+        self.sut.dump_schemas()
+
     @skip("Used during discovery phase")
     def test_dump_capabilities(self):
         self.sut.dump_capabilities()
