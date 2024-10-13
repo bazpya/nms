@@ -35,7 +35,7 @@ class Router_(TestBase):
         self.assertIsInstance(result, str)
 
     @skip
-    def test_get_interfaces_gets_list_of_str(self):
+    def test_list_interfaces_gets_list_of_str(self):
         result = self.sut.list_interfaces()
         self.assertAreInstances(result, str)
 
