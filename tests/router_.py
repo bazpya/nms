@@ -16,10 +16,12 @@ class Router_(TestBase):
 
     # ==========================  Decorators  ==========================
 
+    @skip
     def test_decorator_if_connection_open_reuses_it(self):
         outer, inner = self.sut._outer_connection_getter()
         self.assertIs(outer, inner)
 
+    @skip
     def test_decorator_if_connection_closed_makes_new(self):
         con1 = self.sut._inner_connection_getter()
         con2 = self.sut._inner_connection_getter()

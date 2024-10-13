@@ -89,11 +89,11 @@ class Device(ABC):
     @with_connection
     def dump_schemas(self, connection: NetConfConnection) -> None:
         capabilities = self.get_capabilities()
-        models = []
+        models = set()
         for capability in capabilities:
-            module = Regex.search("module=(.*)&", capability)
+            module = Regex.search("module=([^&]*)", capability)
             if module is not None:
-                models.append(module.groups(0)[0])
+                models.add(module.group(1))
         for model in models:
             schema = connection.get_schema(identifier=model)
             with open(f"./dump/schema/{model}.yang", "w") as dump_file:
