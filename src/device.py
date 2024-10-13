@@ -71,6 +71,15 @@ class Device(ABC):
         return tag.firstChild.nodeValue
 
     @with_connection
+    def list_interfaces(self, connection: NetConfConnection) -> str:
+        filter = XmlRepository.list_interfaces()
+        response = connection.get_config(source="running", filter=filter)
+        xml_string = response.xml
+        xml_tree = XML.parseString(xml_string)
+        tags = xml_tree.getElementsByTagName("interface-name")
+        return [x.firstChild.nodeValue for x in tags]
+
+    @with_connection
     def get_capabilities(self, connection: NetConfConnection) -> list[str]:
         return [x for x in connection.server_capabilities]
 
