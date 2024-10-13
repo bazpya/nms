@@ -14,6 +14,19 @@ class Router_(TestBase):
         self.sut = Router(url, port, username, password)
         return super().setUp()
 
+    # ==========================  Decorators  ==========================
+
+    def test_decorator_if_connection_open_reuses_it(self):
+        outer, inner = self.sut._outer_connection_getter()
+        self.assertIs(outer, inner)
+
+    def test_decorator_if_connection_closed_makes_new(self):
+        con1 = self.sut._inner_connection_getter()
+        con2 = self.sut._inner_connection_getter()
+        self.assertIsNot(con1, con2)
+
+    # ==========================  Public Interface  ==========================
+
     @skip
     def test_get_hostname_gets_string(self):
         result = self.sut.get_hostname()

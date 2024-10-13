@@ -2,7 +2,6 @@ from abc import ABC
 import re as Regex
 from ncclient import manager as NetConfConnection
 import xml.dom.minidom as XML
-from src.decorator import with_connection
 
 
 class Device(ABC):
@@ -26,6 +25,40 @@ class Device(ABC):
         self._username = username
         self._password = password
         self._connection = None
+
+    # ==========================  Properties  ==========================
+
+    @property
+    def is_connected(self) -> bool:
+        if self._connection is None:
+            return False
+        return self._connection._session.connected
+
+    # ==========================  Decorators  ==========================
+
+    def with_connection(target_func):
+        # baztodo: Add docstring
+        def wrapper(self: "Device", *args, **kwargs):
+            # Reuse connection if it's still open
+            if self.is_connected:
+                connection = self._connection
+                return target_func(self, connection, *args, **kwargs)
+            with NetConfConnection.connect(
+                host=self._url,
+                port=self._port,
+                username=self._username,
+                password=self._password,
+                hostkey_verify=False,
+                device_params={"name": "default"},
+                allow_agent=False,
+                look_for_keys=False,
+            ) as connection:
+                self._connection = connection
+                return target_func(self, connection, *args, **kwargs)
+
+        return wrapper
+
+    # ==========================  Public Interface  ==========================
 
     @with_connection
     def get_hostname(self, connection: NetConfConnection) -> str:
@@ -71,3 +104,20 @@ class Device(ABC):
         with open("./dump/config.xml", "w") as output_file:
             response = connection.get_config("running")
             output_file.write(response.xml)
+
+    # ==========================  Test Points  ==========================
+
+    # These are handles to the internal state of the instance to make
+    # it easy to probe into it and test for state changes
+
+    @with_connection
+    def _outer_connection_getter(
+        self, connection: NetConfConnection
+    ) -> tuple[object, object]:
+        inner_connection = self._inner_connection_getter()
+        outer_connection = connection
+        return [outer_connection, inner_connection]
+
+    @with_connection
+    def _inner_connection_getter(self, connection: NetConfConnection) -> object:
+        return connection
