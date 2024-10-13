@@ -34,6 +34,13 @@ class Router_(TestBase):
         result = self.sut.get_hostname()
         self.assertIsInstance(result, str)
 
+    # @skip
+    def test_add_loopback(self):
+        before = self.sut.list_interfaces()
+        after = self.sut.add_loopback(13)
+        # baztodo: Assert the new interface in the list
+        self.assertEqual(len(before) + 1, len(after))
+
     @skip
     def test_list_interfaces_gets_list_of_str(self):
         result = self.sut.list_interfaces()

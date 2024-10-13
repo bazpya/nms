@@ -71,6 +71,21 @@ class Device(ABC):
         return tag.firstChild.nodeValue
 
     @with_connection
+    def add_loopback(self, connection: NetConfConnection, suffix: int) -> list[str]:
+        # baztodo: validate suffix. No leading zero
+        config_subtree = XmlRepository.add_loopback().format(
+            name=f"Loopback{suffix}",
+        )
+        connection.edit_config(
+            target="candidate",
+            config=config_subtree,
+            default_operation="merge",
+        )
+        connection.commit()
+        interface_names = self.list_interfaces()
+        return interface_names
+
+    @with_connection
     def list_interfaces(self, connection: NetConfConnection) -> list[str]:
         filter = XmlRepository.list_interfaces()
         response = connection.get_config(source="running", filter=filter)
