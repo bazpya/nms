@@ -2,6 +2,7 @@ from abc import ABC
 import re as Regex
 from ncclient import manager as NetConfConnection
 import xml.dom.minidom as XML
+from src.xml_repository import XmlRepository
 
 
 class Device(ABC):
@@ -62,18 +63,11 @@ class Device(ABC):
 
     @with_connection
     def get_hostname(self, connection: NetConfConnection) -> str:
-        filter = """
-            <filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"> 
-             <system xmlns="http://openconfig.net/yang/system">
-              <config>
-               <hostname />
-              </config>
-             </system>
-            </filter>
-        """
+        filter = XmlRepository.get_hostname()
         response = connection.get_config(source="running", filter=filter)
-        xml = XML.parseString(response.xml)
-        tag = xml.getElementsByTagName("hostname")[0]
+        xml_string = response.xml
+        xml_tree = XML.parseString(xml_string)
+        tag = xml_tree.getElementsByTagName("hostname")[0]
         return tag.firstChild.nodeValue
 
     @with_connection
