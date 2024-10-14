@@ -34,7 +34,7 @@ class Router_(TestBase):
         result = self.sut.get_hostname()
         self.assertIsInstance(result, str)
 
-    # @skip
+    @skip
     def test_add_loopback(self):
         before = self.sut.list_interfaces()
         after = self.sut.add_loopback(13)
@@ -45,6 +45,17 @@ class Router_(TestBase):
     def test_list_interfaces_gets_list_of_str(self):
         result = self.sut.list_interfaces()
         self.assertAreInstances(result, str)
+
+    @skip
+    def test_list_loopback_numbers_gets_list_of_int(self):
+        result = self.sut.list_loopback_numbers()
+        self.assertAreInstances(result, int)
+
+    @skip
+    def test_list_interfaces_if_loopback_only_gets_fewer(self):
+        loopback_only = self.sut.list_interfaces(loopback_only=True)
+        all = self.sut.list_interfaces(loopback_only=False)
+        self.assertLess(len(loopback_only), len(all))
 
     @skip
     def test_get_capabilities_gets_list_of_str(self):

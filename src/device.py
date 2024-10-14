@@ -44,6 +44,7 @@ class Device(ABC):
             if self.is_connected:
                 connection = self._connection
                 return target_func(self, connection, *args, **kwargs)
+            # baztodo: Exception handling here
             with NetConfConnection.connect(
                 host=self._url,
                 port=self._port,
@@ -86,13 +87,26 @@ class Device(ABC):
         return interface_names
 
     @with_connection
-    def list_interfaces(self, connection: NetConfConnection) -> list[str]:
+    def list_interfaces(
+        self,
+        connection: NetConfConnection,
+        loopback_only=True,
+    ) -> list[str]:
         filter = XmlRepository.list_interfaces()
         response = connection.get_config(source="running", filter=filter)
         xml_string = response.xml
         xml_tree = XML.parseString(xml_string)
         tags = xml_tree.getElementsByTagName("interface-name")
-        return [x.firstChild.nodeValue for x in tags]
+        names = [x.firstChild.nodeValue for x in tags]
+        if loopback_only:
+            return [x for x in names if x.startswith("Loopback")]
+        return names
+
+    def list_loopback_numbers(self) -> list[int]:
+        names = self.list_interfaces(loopback_only=True)
+        suffixes = [x.strip("Loopback") for x in names]
+        numbers = [int(x) for x in suffixes]
+        return numbers
 
     @with_connection
     def get_capabilities(self, connection: NetConfConnection) -> list[str]:
