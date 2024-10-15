@@ -113,6 +113,23 @@ class Router_(TestBase):
     def test_dump_config(self):
         self.sut.dump_config()
 
+    # ==========================  Complete Workflows  ==========================
+
+    @skip
+    def test_loopback_life_cycle(self):
+        before = self.sut.list_loopback_suffixes()
+        suffix = self.sut.add_loopback()
+        self.assertNotIn(suffix, before)
+        former_count = len(before)
+
+        middle = self.sut.list_loopback_suffixes()
+        self.assertIn(suffix, middle)
+
+        after = self.sut.delete_loopback(suffix)
+        self.assertNotIn(suffix, after)
+        latter_count = len(after)
+        self.assertEqual(former_count, latter_count)
+
     # ==========================  Private Logic  ==========================
 
     suffix_validation_cases = [
