@@ -59,6 +59,11 @@ class Router_(TestBase):
         self.assertLess(len(loopback_only), len(all))
 
     @skip
+    def test_list_interfaces_if_loopback_only_gets_loopbacks_only(self):
+        names = self.sut.list_interfaces(loopback_only=True)
+        self.assertAll(names, lambda x: x.startswith("Loopback"))
+
+    @skip
     def test_get_capabilities_gets_list_of_str(self):
         result = self.sut.get_capabilities()
         self.assertAreInstances(result, str)
