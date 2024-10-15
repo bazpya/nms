@@ -2,15 +2,18 @@ from unittest.mock import MagicMock
 from bazpy.testing.testbase import TestBase
 from engine.router import Router
 from unittest import skip
+from engine.vault import Vault
 
 
 class Router_(TestBase):
 
     def setUp(self) -> None:
-        url = "sandbox-iosxr-1.cisco.com"
-        port = 830
-        username = "admin"
-        password = "C1sco12345"
+        vault = Vault()
+        secrets = vault.get()
+        url = secrets["nms_device_url"]
+        port = secrets["nms_netconf_port"]
+        username = secrets["nms_username"]
+        password = secrets["nms_password"]
 
         self.sut = Router(url, port, username, password)
         return super().setUp()

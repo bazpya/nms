@@ -1,0 +1,10 @@
+// {
+//     "version": "2.0.0",
+//     "tasks": [
+//         {
+//             "label": "Export secrets from .env to shell environment",
+//             "type": "shell",
+//             "command": "set -o allexport && source ./.env && set +o allexport"
+//         }
+//     ]
+// }
