@@ -28,12 +28,7 @@ class Router_(TestBase):
         con2 = self.sut._inner_connection_getter()
         self.assertIsNot(con1, con2)
 
-    # ==========================  Public Interface  ==========================
-
-    @skip
-    def test_get_hostname_gets_string(self):
-        result = self.sut.get_hostname()
-        self.assertIsInstance(result, str)
+    # ==========================  Commands  ==========================
 
     @skip
     def test_add_loopback_validates_suffix_parameter(self):
@@ -72,6 +67,13 @@ class Router_(TestBase):
         latter_count = len(after)
         self.assertEqual(former_count - 1, latter_count)
         self.assertNotIn(suffix_to_delete, after)
+
+    # ==========================  Queries  ==========================
+
+    @skip
+    def test_get_hostname_gets_string(self):
+        result = self.sut.get_hostname()
+        self.assertIsInstance(result, str)
 
     @skip
     def test_list_interfaces_gets_list_of_str(self):

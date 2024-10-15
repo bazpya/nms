@@ -60,16 +60,7 @@ class Device(ABC):
 
         return wrapper
 
-    # ==========================  Public Interface  ==========================
-
-    @with_connection
-    def get_hostname(self, connection: NetConfConnection) -> str:
-        filter = XmlRepository.get_hostname()
-        response = connection.get_config(source="running", filter=filter)
-        xml_string = response.xml
-        xml_tree = XML.parseString(xml_string)
-        tag = xml_tree.getElementsByTagName("hostname")[0]
-        return tag.firstChild.nodeValue
+    # ==========================  Commands  ==========================
 
     @with_connection
     def add_loopback(
@@ -89,22 +80,6 @@ class Device(ABC):
         )
         connection.commit()
         return suffix
-
-    @with_connection
-    def is_loopback_up(
-        self,
-        connection: NetConfConnection,
-        suffix: int,
-    ) -> bool:
-        filter_subtree = XmlRepository.get_loopback_status().format(
-            name=f"Loopback{suffix}",
-        )
-        response = connection.get(filter=filter_subtree)
-        xml_string = response.xml
-        xml_tree = XML.parseString(xml_string)
-        tag = xml_tree.getElementsByTagName("oper-status")[0]
-        text = tag.firstChild.nodeValue
-        return text == "UP"
 
     @with_connection
     def set_loopback_status(
@@ -147,6 +122,17 @@ class Device(ABC):
         commit_res = connection.commit()
         return self.list_loopback_suffixes()
 
+    # ==========================  Queries  ==========================
+
+    @with_connection
+    def get_hostname(self, connection: NetConfConnection) -> str:
+        filter = XmlRepository.get_hostname()
+        response = connection.get_config(source="running", filter=filter)
+        xml_string = response.xml
+        xml_tree = XML.parseString(xml_string)
+        tag = xml_tree.getElementsByTagName("hostname")[0]
+        return tag.firstChild.nodeValue
+
     @with_connection
     def list_interfaces(
         self,
@@ -168,6 +154,22 @@ class Device(ABC):
         suffixes = [x.strip("Loopback") for x in names]
         suffixes = [int(x) for x in suffixes]
         return suffixes
+
+    @with_connection
+    def is_loopback_up(
+        self,
+        connection: NetConfConnection,
+        suffix: int,
+    ) -> bool:
+        filter_subtree = XmlRepository.get_loopback_status().format(
+            name=f"Loopback{suffix}",
+        )
+        response = connection.get(filter=filter_subtree)
+        xml_string = response.xml
+        xml_tree = XML.parseString(xml_string)
+        tag = xml_tree.getElementsByTagName("oper-status")[0]
+        text = tag.firstChild.nodeValue
+        return text == "UP"
 
     @with_connection
     def get_capabilities(self, connection: NetConfConnection) -> list[str]:
