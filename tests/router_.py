@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 from bazpy.testing.testbase import TestBase
 from src.router import Router
 from unittest import skip
@@ -35,7 +36,15 @@ class Router_(TestBase):
         self.assertIsInstance(result, str)
 
     @skip
-    def test_add_loopback(self):
+    def test_add_loopback_validates_suffix_parameter(self):
+        stub = MagicMock()
+        self.sut.validate_loopback_suffix = stub
+        suffix = self.sut.pick_unused_loopback_suffix()
+        self.sut.add_loopback(suffix)
+        stub.assert_called_once_with(suffix)
+
+    @skip
+    def test_add_loopback_works(self):
         before = self.sut.list_loopback_suffixes()
         suffix = self.sut.add_loopback()
         after = self.sut.list_loopback_suffixes()
@@ -82,22 +91,22 @@ class Router_(TestBase):
 
     # ==========================  Private Logic  ==========================
 
-    # suffix_validation_cases = [
-    #     (-1, True),
-    #     (0, True),
-    #     (1, False),
-    #     (999, False),
-    #     (1000, True),
-    # ]
+    suffix_validation_cases = [
+        (-1, True),
+        (0, True),
+        (1, False),
+        (999, False),
+        (1000, True),
+    ]
 
-    # def test_validate_loopback_suffix(self):
-    #     for input, should_raise in self.suffix_validation_cases:
-    #         with self.subTest():
-    #             if should_raise:
-    #                 validation = lambda: self.sut.validate_loopback_suffix(input)
-    #                 self.assertRaises((ValueError, TypeError), validation)
-    #             else:
-    #                 self.sut.validate_loopback_suffix(input)
+    def test_validate_loopback_suffix(self):
+        for input, should_raise in self.suffix_validation_cases:
+            with self.subTest():
+                if should_raise:
+                    validation = lambda: self.sut.validate_loopback_suffix(input)
+                    self.assertRaises((ValueError, TypeError), validation)
+                else:
+                    self.sut.validate_loopback_suffix(input)
 
     number_picking_cases = [
         ([], 1),

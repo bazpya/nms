@@ -72,8 +72,13 @@ class Device(ABC):
         return tag.firstChild.nodeValue
 
     @with_connection
-    def add_loopback(self, connection: NetConfConnection) -> int:
-        suffix = self.pick_unused_loopback_suffix()
+    def add_loopback(
+        self,
+        connection: NetConfConnection,
+        suffix: int = None,
+    ) -> int:
+        suffix = suffix or self.pick_unused_loopback_suffix()
+        self.validate_loopback_suffix(suffix)
         config_subtree = XmlRepository.add_loopback().format(
             name=f"Loopback{suffix}",
         )
@@ -138,13 +143,13 @@ class Device(ABC):
 
     # ==========================  Private Logic  ==========================
 
-    # def validate_loopback_suffix(self, suffix: int):
-    #     if not isinstance(suffix, int):
-    #         raise TypeError("Loopback suffix needs to be an integer")
-    #     if suffix <= 0:
-    #         raise ValueError("Loopback suffix may not be less than 1")
-    #     if suffix > 999:  # baztodo: Document arbitrary assumtion
-    #         raise ValueError("Loopback suffix may not exceed 999")
+    def validate_loopback_suffix(self, suffix: int):
+        if not isinstance(suffix, int):
+            raise TypeError("Loopback suffix needs to be an integer")
+        if suffix <= 0:
+            raise ValueError("Loopback suffix may not be less than 1")
+        if suffix > 999:  # baztodo: Document arbitrary assumtion
+            raise ValueError("Loopback suffix may not exceed 999")
 
     def pick_unused_loopback_suffix(self) -> int:
         used_suffixes = self.list_loopback_suffixes()

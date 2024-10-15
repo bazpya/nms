@@ -99,6 +99,8 @@ Querying capabilities on the device is rather straighforward. Based on the capab
 
 Baztodo: Maintain a temporarily todo list here for my next steps:
 
+- Group tests into local, with_remote with skipIf/skipUnless decorators
+
 - Experiment with get_config(source="running", filter=('xpath', "/interfaces/interface/name"))
 
 - Type hinting everywhere
