@@ -2,7 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Api",  //baztodo
+            "name": "Launch Api",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            // "cwd": "${workspaceFolder}/api",
+            "args": [
+                "api.main:app",
+                "--reload"
+            ],
+            "jinja": true,
             "presentation": {
                 "hidden": false,
                 "group": "Api",
