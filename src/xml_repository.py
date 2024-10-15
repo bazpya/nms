@@ -33,3 +33,32 @@ class XmlRepository:
               </interface-configurations>
             </config>
         """
+
+    def get_loopback_status() -> str:
+        return """
+            <filter>
+              <interfaces xmlns="http://openconfig.net/yang/interfaces">
+                <interface>
+                  <name>{name}</name>
+                  <state>
+                    <oper-status/>
+                  </state>
+                </interface>
+              </interfaces>
+            </filter>
+        """
+
+    def set_loopback_status() -> str:
+        return """
+            <config>
+              <interfaces xmlns="http://openconfig.net/yang/interfaces">
+                <interface>
+                  <name>{name}</name>
+                  <config>
+                    <name>{name}</name>
+                    <enabled>{status}</enabled>
+                  </config>
+                </interface>
+              </interfaces>
+            </config>
+        """

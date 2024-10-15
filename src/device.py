@@ -91,6 +91,44 @@ class Device(ABC):
         return suffix
 
     @with_connection
+    def is_loopback_up(
+        self,
+        connection: NetConfConnection,
+        suffix: int,
+    ) -> bool:
+        filter_subtree = XmlRepository.get_loopback_status().format(
+            name=f"Loopback{suffix}",
+        )
+        response = connection.get(filter=filter_subtree)
+        xml_string = response.xml
+        xml_tree = XML.parseString(xml_string)
+        tag = xml_tree.getElementsByTagName("oper-status")[0]
+        text = tag.firstChild.nodeValue
+        return text == "UP"
+
+    @with_connection
+    def set_loopback_status(
+        self,
+        connection: NetConfConnection,
+        suffix: int,
+        enable: bool = True,
+    ) -> bool:
+        status_str = "true" if enable else "false"
+        config_subtree = XmlRepository.set_loopback_status().format(
+            name=f"Loopback{suffix}",
+            status=status_str,
+        )
+        connection.edit_config(
+            target="candidate",
+            config=config_subtree,
+            default_operation="merge",
+        )
+        validation_res = connection.validate()
+        commit_res = connection.commit()
+        is_up = self.is_loopback_up(suffix)
+        return is_up
+
+    @with_connection
     def list_interfaces(
         self,
         connection: NetConfConnection,

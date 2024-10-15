@@ -52,6 +52,16 @@ class Router_(TestBase):
         self.assertIn(suffix, after)
 
     @skip
+    def test_set_loopback_status_works(self):
+        suffixes = self.sut.list_loopback_suffixes()
+        suffix = suffixes[-1]
+        if suffix == 0:
+            raise RuntimeError("Loopback0 cannot be altered!")
+        before = self.sut.is_loopback_up(suffix)
+        after = self.sut.set_loopback_status(suffix, not before)
+        self.assertTrue(before ^ after)
+
+    @skip
     def test_list_interfaces_gets_list_of_str(self):
         result = self.sut.list_interfaces()
         self.assertAreInstances(result, str)
