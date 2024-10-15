@@ -62,6 +62,18 @@ class Router_(TestBase):
         self.assertTrue(before ^ after)
 
     @skip
+    def test_delete_loopback_works(self):
+        before = self.sut.list_loopback_suffixes()
+        former_count = len(before)
+        if former_count < 1:
+            raise RuntimeError("No Loopback left to delete!")
+        suffix_to_delete = before[-1]
+        after = self.sut.delete_loopback(suffix_to_delete)
+        latter_count = len(after)
+        self.assertEqual(former_count - 1, latter_count)
+        self.assertNotIn(suffix_to_delete, after)
+
+    @skip
     def test_list_interfaces_gets_list_of_str(self):
         result = self.sut.list_interfaces()
         self.assertAreInstances(result, str)

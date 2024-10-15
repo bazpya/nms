@@ -129,6 +129,25 @@ class Device(ABC):
         return is_up
 
     @with_connection
+    def delete_loopback(
+        self,
+        connection: NetConfConnection,
+        suffix: int,
+    ) -> list[int]:
+        name_to_delete = f"Loopback{suffix}"
+        config_subtree = XmlRepository.delete_loopback().format(
+            name=name_to_delete,
+        )
+        connection.edit_config(
+            target="candidate",
+            config=config_subtree,
+            default_operation="merge",
+        )
+        validation_res = connection.validate()
+        commit_res = connection.commit()
+        return self.list_loopback_suffixes()
+
+    @with_connection
     def list_interfaces(
         self,
         connection: NetConfConnection,

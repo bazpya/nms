@@ -62,3 +62,15 @@ class XmlRepository:
               </interfaces>
             </config>
         """
+
+    def delete_loopback() -> str:
+        return """
+            <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+                <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+                   <interface-configuration xc:operation="delete">
+                   <active>act</active>
+                   <interface-name>{name}</interface-name>
+                </interface-configuration>
+              </interface-configurations>
+            </config>
+        """
