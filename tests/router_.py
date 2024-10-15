@@ -36,9 +36,9 @@ class Router_(TestBase):
 
     @skip
     def test_add_loopback(self):
-        before = self.sut.list_loopback_numbers()
+        before = self.sut.list_loopback_suffixes()
         suffix = self.sut.add_loopback()
-        after = self.sut.list_loopback_numbers()
+        after = self.sut.list_loopback_suffixes()
         self.assertEqual(len(before) + 1, len(after))
         self.assertIn(suffix, after)
 
@@ -48,8 +48,8 @@ class Router_(TestBase):
         self.assertAreInstances(result, str)
 
     @skip
-    def test_list_loopback_numbers_gets_list_of_int(self):
-        result = self.sut.list_loopback_numbers()
+    def test_list_loopback_suffixes_gets_list_of_int(self):
+        result = self.sut.list_loopback_suffixes()
         self.assertAreInstances(result, int)
 
     @skip

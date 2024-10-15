@@ -73,7 +73,7 @@ class Device(ABC):
 
     @with_connection
     def add_loopback(self, connection: NetConfConnection) -> int:
-        suffix = self.pick_unused_loopback_number()
+        suffix = self.pick_unused_loopback_suffix()
         config_subtree = XmlRepository.add_loopback().format(
             name=f"Loopback{suffix}",
         )
@@ -101,11 +101,11 @@ class Device(ABC):
             return [x for x in names if x.startswith("Loopback")]
         return names
 
-    def list_loopback_numbers(self) -> list[int]:
+    def list_loopback_suffixes(self) -> list[int]:
         names = self.list_interfaces(loopback_only=True)
         suffixes = [x.strip("Loopback") for x in names]
-        numbers = [int(x) for x in suffixes]
-        return numbers
+        suffixes = [int(x) for x in suffixes]
+        return suffixes
 
     @with_connection
     def get_capabilities(self, connection: NetConfConnection) -> list[str]:
@@ -140,14 +140,14 @@ class Device(ABC):
 
     # def validate_loopback_suffix(self, suffix: int):
     #     if not isinstance(suffix, int):
-    #         raise TypeError("Loopback number needs to be an integer")
+    #         raise TypeError("Loopback suffix needs to be an integer")
     #     if suffix <= 0:
-    #         raise ValueError("Loopback number may not be less than 1")
+    #         raise ValueError("Loopback suffix may not be less than 1")
     #     if suffix > 999:  # baztodo: Document arbitrary assumtion
-    #         raise ValueError("Loopback number may not exceed 999")
+    #         raise ValueError("Loopback suffix may not exceed 999")
 
-    def pick_unused_loopback_number(self) -> int:
-        used_suffixes = self.list_loopback_numbers()
+    def pick_unused_loopback_suffix(self) -> int:
+        used_suffixes = self.list_loopback_suffixes()
         suffix = self.pick_unused_number(used_suffixes)
         return suffix
 
