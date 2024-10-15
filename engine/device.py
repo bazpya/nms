@@ -2,7 +2,7 @@ from abc import ABC
 import re as Regex
 from ncclient import manager as NetConfConnection
 import xml.dom.minidom as XML
-from src.xml_repository import XmlRepository
+from engine.xml_repository import XmlRepository
 
 
 class Device(ABC):

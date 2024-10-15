@@ -2,7 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Test",
+            "name": "Launch Api",  //baztodo
+            "presentation": {
+                "hidden": false,
+                "group": "Api",
+                "order": 1
+            },
+        },
+        {
+            "name": "Test Engine",
             "type": "debugpy",
             "request": "launch",
             "module": "unittest",
@@ -10,10 +18,15 @@
             "args": [
                 "discover",
                 "-s",
-                "tests",
+                "engine-tests",
                 "-p",
                 "*_.py"
             ],
+            "presentation": {
+                "hidden": false,
+                "group": "Engine",
+                "order": 1
+            },
         },
     ]
 }
