@@ -36,10 +36,11 @@ class Router_(TestBase):
 
     @skip
     def test_add_loopback(self):
-        before = self.sut.list_interfaces()
-        after = self.sut.add_loopback(13)
-        # baztodo: Assert the new interface in the list
+        before = self.sut.list_loopback_numbers()
+        suffix = self.sut.add_loopback()
+        after = self.sut.list_loopback_numbers()
         self.assertEqual(len(before) + 1, len(after))
+        self.assertIn(suffix, after)
 
     @skip
     def test_list_interfaces_gets_list_of_str(self):
@@ -73,3 +74,41 @@ class Router_(TestBase):
     @skip("Used during discovery phase")
     def test_dump_config(self):
         self.sut.dump_config()
+
+    # ==========================  Private Logic  ==========================
+
+    # suffix_validation_cases = [
+    #     (-1, True),
+    #     (0, True),
+    #     (1, False),
+    #     (999, False),
+    #     (1000, True),
+    # ]
+
+    # def test_validate_loopback_suffix(self):
+    #     for input, should_raise in self.suffix_validation_cases:
+    #         with self.subTest():
+    #             if should_raise:
+    #                 validation = lambda: self.sut.validate_loopback_suffix(input)
+    #                 self.assertRaises((ValueError, TypeError), validation)
+    #             else:
+    #                 self.sut.validate_loopback_suffix(input)
+
+    number_picking_cases = [
+        ([], 1),
+        ([0], 1),
+        ([2], 1),
+        ([1, 3], 2),
+        (range(999), 999),
+    ]
+
+    def test_pick_unused_number(self):
+        for input, expected in self.number_picking_cases:
+            with self.subTest():
+                actual = self.sut.pick_unused_number(input)
+                self.assertEqual(actual, expected)
+
+    def test_pick_unused_number_when_all_taken_raises_error(self):
+        used_numbers = range(1000)
+        dodgy_action = lambda: self.sut.pick_unused_number(used_numbers)
+        self.assertRaises(RuntimeError, dodgy_action)

@@ -72,8 +72,8 @@ class Device(ABC):
         return tag.firstChild.nodeValue
 
     @with_connection
-    def add_loopback(self, connection: NetConfConnection, suffix: int) -> list[str]:
-        # baztodo: validate suffix. No leading zero
+    def add_loopback(self, connection: NetConfConnection) -> int:
+        suffix = self.pick_unused_loopback_number()
         config_subtree = XmlRepository.add_loopback().format(
             name=f"Loopback{suffix}",
         )
@@ -83,8 +83,7 @@ class Device(ABC):
             default_operation="merge",
         )
         connection.commit()
-        interface_names = self.list_interfaces()
-        return interface_names
+        return suffix
 
     @with_connection
     def list_interfaces(
@@ -136,6 +135,28 @@ class Device(ABC):
         with open("./dump/config.xml", "w") as output_file:
             response = connection.get_config("running")
             output_file.write(response.xml)
+
+    # ==========================  Private Logic  ==========================
+
+    # def validate_loopback_suffix(self, suffix: int):
+    #     if not isinstance(suffix, int):
+    #         raise TypeError("Loopback number needs to be an integer")
+    #     if suffix <= 0:
+    #         raise ValueError("Loopback number may not be less than 1")
+    #     if suffix > 999:  # baztodo: Document arbitrary assumtion
+    #         raise ValueError("Loopback number may not exceed 999")
+
+    def pick_unused_loopback_number(self) -> int:
+        used_suffixes = self.list_loopback_numbers()
+        suffix = self.pick_unused_number(used_suffixes)
+        return suffix
+
+    def pick_unused_number(self, used: list[int]) -> int:
+        for i in range(1, 1000):
+            if i not in used:
+                return i
+        else:
+            raise RuntimeError("Couldn't pick an unused number")
 
     # ==========================  Test Points  ==========================
 
