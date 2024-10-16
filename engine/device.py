@@ -128,6 +128,7 @@ class Device(ABC):
     def get_hostname(self, connection: NetConfConnection) -> str:
         filter = XmlRepository.get_hostname()
         response = connection.get_config(source="running", filter=filter)
+        # baztodo: Wrap all XML parsing in try blocks in case tags missing
         xml_string = response.xml
         xml_tree = XML.parseString(xml_string)
         tag = xml_tree.getElementsByTagName("hostname")[0]

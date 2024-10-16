@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        // ==========================  API  ==========================
         {
             "name": "Launch Api",
             "type": "debugpy",
@@ -12,11 +13,29 @@
             ],
             "jinja": true,
             "presentation": {
-                "hidden": false,
                 "group": "Api",
                 "order": 1
             },
         },
+        {
+            "name": "Test Api",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "unittest",
+            "justMyCode": true,
+            "args": [
+                "discover",
+                "-s",
+                "api-tests",
+                "-p",
+                "*_.py"
+            ],
+            "presentation": {
+                "group": "Api",
+                "order": 2
+            },
+        },
+        // ==========================  Engine  ==========================
         {
             "name": "Test Engine",
             // "preLaunchTask": "Export secrets from .env to shell environment",
@@ -32,7 +51,6 @@
                 "*_.py"
             ],
             "presentation": {
-                "hidden": false,
                 "group": "Engine",
                 "order": 1
             },

@@ -73,7 +73,7 @@ class Router_(TestBase):
 
     @skip
     def test_list_interfaces_gets_list_of_str(self):
-        result = self.sut.list_interfaces()
+        result = self.sut.list_interfaces(False)
         self.assertAreInstances(result, str)
 
     @skip
