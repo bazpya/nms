@@ -3,6 +3,8 @@ from engine.router import Router
 
 app = FastAPI()
 
+# baztodo: Docstring everywhere
+
 
 @app.get("/")
 async def get_root() -> str:

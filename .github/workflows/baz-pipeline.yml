@@ -1,0 +1,23 @@
+name: Push Event Workflow
+
+on: push
+
+env:
+  nms_device_url: abcd
+  nms_netconf_port: 830
+  nms_username: abcd
+  nms_password: 1234
+
+jobs:
+  unit-testing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Packages
+        run: pip install -r requirements.txt
+
+      - name: Run Tests
+        run: python -m unittest discover -s . -p *_test.py

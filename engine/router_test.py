@@ -5,6 +5,7 @@ from unittest import skip
 
 
 class Router_Test(TestBase):
+    # baztodo: Group tests into local, with_remote with skipIf/skipUnless
 
     def setUp(self) -> None:
         dummy_device_id = 0

@@ -170,9 +170,10 @@ For further development of the engine, it would be nice to:
 
 ### Tests
 
-Unit vs Integration tests.
-Schema discovery tests.
-Skipped tests.
+Explain Unit vs Integration tests and their grouping here.
+The reason why some tests have @skip decorator.
+Discuss schema discovery tests.
+Explain local launch in "Run and Debug" of VSCode.
 
 ## 2 API
 
@@ -231,12 +232,11 @@ I suspect it had to do with the specific payloads that I sent. This slowed down 
 As mentioned earlier Cisco sandboxes are share resource meaning that other developers are interacting with them all the time.  
 This can bring about surprises every now and then especially during testing where you realise someone else is also adding and removing loopback interfaces.
 
-# Baztodo
+# Extra
 
-A temporary todo list for my next steps:
+## GitHub Actions
 
-- Group tests into local, with_remote with skipIf/skipUnless decorators
-
-- Type hinting everywhere
-
-- Exception handling
+One of the key benefits of automated testing is that we can run those tests in our CI pipeline. With every change that we push a round of testing is triggerred in the pipeline which helps ensure sanity of our codebase.  
+Please note that some of my engine tests are decorated with @skip. The reason is that they repeatedly hit the remote device to authenticate. So much so that I'm afraid that might make the request origin look suspicious to Cisco cloud. Anyway, I decided to play safe and run them only if the developer specifically intends to.  
+In that case we can simply comment the @skip decorator.
+A great example is [test_loopback_life_cycle](./engine/router_test.py#L116) which covers the entire workflow of addition, listing and removal of a loopback interface on the remote device.
