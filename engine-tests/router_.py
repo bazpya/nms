@@ -2,20 +2,13 @@ from unittest.mock import MagicMock
 from bazpy.testing.testbase import TestBase
 from engine.router import Router
 from unittest import skip
-from engine.vault import Vault
 
 
 class Router_(TestBase):
 
     def setUp(self) -> None:
-        vault = Vault()
-        secrets = vault.get()
-        url = secrets["nms_device_url"]
-        port = secrets["nms_netconf_port"]
-        username = secrets["nms_username"]
-        password = secrets["nms_password"]
-
-        self.sut = Router(url, port, username, password)
+        dummy_device_id = 0
+        self.sut = Router(dummy_device_id)
         return super().setUp()
 
     # ==========================  Decorators  ==========================

@@ -2,6 +2,7 @@ from abc import ABC
 import re as Regex
 from ncclient import manager as NetConfConnection
 import xml.dom.minidom as XML
+from engine.cred_vault import CredVault
 from engine.xml_repository import XmlRepository
 
 
@@ -16,15 +17,14 @@ class Device(ABC):
 
     def __init__(
         self,
-        url: str,
-        port: int,
-        username: str,
-        password: str,
+        id: int,
     ) -> None:
-        self._url = url
-        self._port = port
-        self._username = username
-        self._password = password
+        vault = CredVault()
+        creds = vault.get(id)
+        self._url = creds["url"]
+        self._port = creds["port"]
+        self._username = creds["username"]
+        self._password = creds["password"]
         self._connection = None
 
     # ==========================  Properties  ==========================
