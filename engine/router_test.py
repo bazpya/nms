@@ -4,7 +4,7 @@ from engine.router import Router
 from unittest import skip
 
 
-class Router_(TestBase):
+class Router_Test(TestBase):
 
     def setUp(self) -> None:
         dummy_device_id = 0

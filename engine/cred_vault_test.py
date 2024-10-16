@@ -6,7 +6,7 @@ from os import environ as Environment
 
 
 @skip("Because changes env variables")
-class CredVault_(TestBase):
+class CredVault_Test(TestBase):
     def setUp(self) -> None:
         self.expected = {}
         self.expected["url"] = Random.String.make()

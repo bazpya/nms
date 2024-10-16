@@ -7,7 +7,7 @@ from bazpy.random import Random
 client = TestClient(app)
 
 
-class Main_(TestBase):
+class Main_Test(TestBase):
     def setUp(self) -> None:
         self.mock_cred_vault = MagicMock()
         return super().setUp()

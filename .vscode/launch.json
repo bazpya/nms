@@ -3,7 +3,7 @@
     "configurations": [
         // ==========================  API  ==========================
         {
-            "name": "Launch Api",
+            "name": "Run Api",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
@@ -26,9 +26,9 @@
             "args": [
                 "discover",
                 "-s",
-                "api-tests",
+                "./api",
                 "-p",
-                "*_.py"
+                "*_test.py"
             ],
             "presentation": {
                 "group": "Api",
@@ -46,12 +46,32 @@
             "args": [
                 "discover",
                 "-s",
-                "engine-tests",
+                "./engine",
                 "-p",
-                "*_.py"
+                "*_test.py"
             ],
             "presentation": {
                 "group": "Engine",
+                "order": 1
+            },
+        },
+        // ==========================  Etc  ==========================
+        {
+            "name": "Test All",
+            "type": "debugpy",
+            "request": "launch",
+            // "cwd": "${workspaceFolder}",
+            "module": "unittest",
+            "justMyCode": true,
+            "args": [
+                "discover",
+                "-s",
+                ".",
+                "-p",
+                "*_test.py"
+            ],
+            "presentation": {
+                "group": "Etc",
                 "order": 1
             },
         },
