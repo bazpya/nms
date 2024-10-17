@@ -3,8 +3,6 @@ from fastapi.responses import RedirectResponse
 from engine.router import Router
 from api.text_repository import descriptions, app_description, summaries, tags_metadata
 
-# baztodo: Docstring everywhere
-
 app = FastAPI(**app_description)
 
 

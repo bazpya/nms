@@ -2,6 +2,14 @@ from os import getenv
 
 
 class CredVault:
+    """Responsible for delivering secret credentials to the application logic at runtime.
+
+    It takes those values from environment variables of the shell in which the app is launched.
+    Those are exported from the .env file in the project root.
+    This Vault is meant to hold a dictionary where the key is unique ID of a device
+    and the value is a set of credentials specific to that device.
+    In dev environment the ID of 0 is populated for dev-testing purposes.
+    """
 
     def __init__(self) -> None:
         test_values: dict[str, str] = {}

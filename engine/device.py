@@ -38,13 +38,18 @@ class Device(ABC):
     # ==========================  Decorators  ==========================
 
     def with_connection(target_func):
-        # baztodo: Add docstring
+        """This decorator injects an ncclient connection object into its target function.
+        It also wraps the target function in a context manager
+        to make sure that the underlying resources are freed up regardless of how the
+        function scope is closed. Either gracefully or disruptively.
+        """
+
         def wrapper(self: "Device", *args, **kwargs):
             # Reuse connection if it's still open
             if self.is_connected:
                 connection = self._connection
                 return target_func(self, connection, *args, **kwargs)
-            # baztodo: Exception handling here
+            # baztodo: Exception handling here depending on the RPC error codes
             with NetConfConnection.connect(
                 host=self._url,
                 port=self._port,
@@ -68,6 +73,14 @@ class Device(ABC):
         connection: NetConfConnection,
         suffix: int = None,
     ) -> int:
+        """If a loopback suffix number is not provided it automatically picks
+        an unused number for the loopback to be added.
+        If suffix specified, it tries to add the loopback with that number.
+        Which may collide with an existing interface name.
+        It returns the suffix number assigned to the newly added loopback.
+        """
+
+        # baztodo: Exception catching in case the interface name is taken
         suffix = suffix or self.pick_unused_loopback_suffix()
         self.validate_loopback_suffix(suffix)
         config_subtree = XmlRepository.add_loopback().format(
@@ -88,6 +101,7 @@ class Device(ABC):
         suffix: int,
         enable: bool = True,
     ) -> bool:
+        """Sets the administrative status of a loopback interface to either UP/DOWN."""
         status_str = "true" if enable else "false"
         config_subtree = XmlRepository.set_loopback_status().format(
             name=f"Loopback{suffix}",
@@ -109,6 +123,10 @@ class Device(ABC):
         connection: NetConfConnection,
         suffix: int,
     ) -> list[int]:
+        """Deletes the loopback interface with the specified suffix number from the device.
+        It returns list of remaining suffix numbers on the device.
+        """
+        # baztodo: Exception handling in case the deletion fails
         name_to_delete = f"Loopback{suffix}"
         config_subtree = XmlRepository.delete_loopback().format(
             name=name_to_delete,
@@ -126,6 +144,7 @@ class Device(ABC):
 
     @with_connection
     def get_hostname(self, connection: NetConfConnection) -> str:
+        """Retrieves hostname from the device"""
         filter = XmlRepository.get_hostname()
         response = connection.get_config(source="running", filter=filter)
         # baztodo: Wrap all XML parsing in try blocks in case tags missing
@@ -140,6 +159,9 @@ class Device(ABC):
         connection: NetConfConnection,
         loopback_only=True,
     ) -> list[str]:
+        """Lists names of interfaces on the device.
+        The boolean flag is to decide whether to include all interfaces or only loopbacks.
+        """
         filter = XmlRepository.list_interfaces()
         response = connection.get_config(source="running", filter=filter)
         xml_string = response.xml
@@ -151,6 +173,7 @@ class Device(ABC):
         return names
 
     def list_loopback_suffixes(self) -> list[int]:
+        """Lists number suffixes of the loopback interfaces on the device"""
         names = self.list_interfaces(loopback_only=True)
         suffixes = [x.strip("Loopback") for x in names]
         suffixes = [int(x) for x in suffixes]
@@ -162,6 +185,7 @@ class Device(ABC):
         connection: NetConfConnection,
         suffix: int,
     ) -> bool:
+        """Determines the administrative status of the loopback interface"""
         filter_subtree = XmlRepository.get_loopback_status().format(
             name=f"Loopback{suffix}",
         )
@@ -174,9 +198,11 @@ class Device(ABC):
 
     @with_connection
     def get_capabilities(self, connection: NetConfConnection) -> list[str]:
+        """Queries the device for its capabilities. It returns a list of supported schemas."""
         return [x for x in connection.server_capabilities]
 
     def dump_capabilities(self) -> None:
+        """Saves the list of device capabilities into a local file."""
         capabilities = self.get_capabilities()
         with open("./dump/capabilities.txt", "w") as output_file:
             for item in capabilities:
@@ -184,6 +210,7 @@ class Device(ABC):
 
     @with_connection
     def dump_schemas(self, connection: NetConfConnection) -> None:
+        """It downloads supported schemas from the device onto local file system."""
         capabilities = self.get_capabilities()
         models = set()
         for capability in capabilities:
@@ -197,6 +224,7 @@ class Device(ABC):
 
     @with_connection
     def dump_config(self, connection: NetConfConnection) -> None:
+        """Downloads device configuration onto the local file system."""
         with open("./dump/config.xml", "w") as output_file:
             response = connection.get_config("running")
             output_file.write(response.xml)
@@ -204,6 +232,7 @@ class Device(ABC):
     # ==========================  Private Logic  ==========================
 
     def validate_loopback_suffix(self, suffix: int):
+        """Validates a numberical suffix for a loopback against an arbitrary range of [1, 999)"""
         if not isinstance(suffix, int):
             raise TypeError("Loopback suffix needs to be an integer")
         if suffix <= 0:
@@ -212,11 +241,13 @@ class Device(ABC):
             raise ValueError("Loopback suffix may not exceed 999")
 
     def pick_unused_loopback_suffix(self) -> int:
+        """Retrieves the list of used loopback suffixes from the device and picks an unused one"""
         used_suffixes = self.list_loopback_suffixes()
         suffix = self.pick_unused_number(used_suffixes)
         return suffix
 
     def pick_unused_number(self, used: list[int]) -> int:
+        """Picks a number within the range [1, 999) excluding the used ones"""
         for i in range(1, 1000):
             if i not in used:
                 return i

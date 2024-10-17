@@ -7,6 +7,17 @@ Repository name purposefully vague since its publicly visible.
 
 Things that aren't explicitly mentioned, naturally lead to assumtions. But it's important to clarify them.
 
+#### Developer Toolset
+
+Components of this project can be launched via CLI independent of any specific development toolset.  
+However, considering the high likelihood of the audience already having VSCode, I have put some launch scripts specific to VSCode in their corresponding folder. So if you navigate to the "Run and Debug" tab in your VSCode you find these handy options:
+- Run Api
+- Test Api
+- Test Engine
+- Test All
+
+If you intend to launch any of the above in a CLI, you can easily take their corresponding command from the launch.json file.
+
 #### Only target running config
 
 Modification of startup-config followed by a reboot requires admin access to the device. The assignment strongly suggests using an always-on sandbox which as mentioned [here](https://developer.cisco.com/docs/sandbox/getting-started/#what-is-devnet-sandbox) blocks admin access. Our focus seems to be on modification of the running config.

@@ -1,4 +1,6 @@
 class XmlRepository:
+    """This is where I separately keep XML strings to reduce clutter in the logic"""
+
     def get_hostname() -> str:
         return """
             <filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"> 

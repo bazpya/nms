@@ -25,8 +25,8 @@ summaries = {
     "get_root": "Redirects to the Swagger page",
     "get_interfaces": "Retrieves list of all interfaces",
     "get_interfaces_loopback": "Retrieves list of loopback interfaces only",
-    "post_interfaces_loopback": "Adds a loopback interface to the device. It automatically picks an unused number suffix for the new loopback",
-    "delete_interfaces_loopback": "Deletes the loopback interface that has the specified number suffix",
+    "post_interfaces_loopback": "Adds a loopback interface to the device. It automatically picks an unused number suffix for the new loopback and returns it as the result.",
+    "delete_interfaces_loopback": "Deletes the loopback interface that has the specified number suffix. Returns list of remaining suffix numbers of loopbacks on the device.",
 }
 
 tags_metadata = [
