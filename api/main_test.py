@@ -15,43 +15,79 @@ class Main_Test(TestBase):
     # ==========================  Query  ==========================
 
     @patch("api.main.Router")
-    def test_get_interfaces(self, router_mocker):
+    def test_get_interfaces_success(self, router_mocker):
         expected = [Random.String.make() for _ in range(self.many)]
         router_mock = router_mocker()
         router_mock.list_interfaces.return_value = expected
         response = client.get(f"/{self.few}/interfaces")
         self.assertEqual(response.status_code, 200)
-        actual = response.json()
+        actual = response.json()["data"]
         self.assertEqual(actual, expected)
 
     @patch("api.main.Router")
-    def test_get_interfaces_loopback(self, router_mocker):
+    def test_get_interfaces_fail(self, router_mocker):
+        router_mock = router_mocker()
+        router_mock.list_interfaces.side_effect = RuntimeError()
+        response = client.get(f"/{self.few}/interfaces")
+        self.assertEqual(response.status_code, 400)
+        actual = response.json()["data"]
+        self.assertIsNone(actual)
+
+    @patch("api.main.Router")
+    def test_get_interfaces_loopback_success(self, router_mocker):
         expected = [Random.String.make() for _ in range(self.some)]
         router_mock = router_mocker()
         router_mock.list_interfaces.return_value = expected
         response = client.get(f"/{self.few}/interfaces/loopback")
         self.assertEqual(response.status_code, 200)
-        actual = response.json()
+        actual = response.json()["data"]
         self.assertEqual(actual, expected)
 
-    # ==========================  Command  ==========================
+    @patch("api.main.Router")
+    def test_get_interfaces_loopback_fail(self, router_mocker):
+        router_mock = router_mocker()
+        router_mock.list_interfaces.side_effect = RuntimeError()
+        response = client.get(f"/{self.few}/interfaces/loopback")
+        self.assertEqual(response.status_code, 400)
+        actual = response.json()["data"]
+        self.assertIsNone(actual)
+
+    # # ==========================  Command  ==========================
 
     @patch("api.main.Router")
-    def test_post_interfaces_loopback(self, router_mocker):
+    def test_put_interfaces_loopback_success(self, router_mocker):
         expected = self.some
         router_mock = router_mocker()
         router_mock.add_loopback.return_value = expected
         response = client.post(f"/{self.few}/interfaces/loopback")
-        self.assertEqual(response.status_code, 200)
-        actual = response.json()
+        self.assertEqual(response.status_code, 201)
+        actual = response.json()["data"]
         self.assertEqual(actual, expected)
 
     @patch("api.main.Router")
-    def test_delete_interfaces_loopback(self, router_mocker):
+    def test_put_interfaces_loopback_fail(self, router_mocker):
+        router_mock = router_mocker()
+        router_mock.add_loopback.side_effect = RuntimeError()
+        response = client.post(f"/{self.few}/interfaces/loopback")
+        self.assertEqual(response.status_code, 400)
+        actual = response.json()["data"]
+        self.assertIsNone(actual)
+
+    @patch("api.main.Router")
+    def test_delete_interfaces_loopback_success(self, router_mocker):
         expected = list(range(self.some))
         router_mock = router_mocker()
         router_mock.delete_loopback.return_value = expected
         response = client.delete(f"/{self.few}/interfaces/loopback/{self.some}")
-        self.assertEqual(response.status_code, 200)
-        actual = response.json()
+        self.assertEqual(response.status_code, 204)
+        actual = response.json()["data"]
         self.assertEqual(actual, expected)
+
+    @patch("api.main.Router")
+    def test_delete_interfaces_loopback_fail(self, router_mocker):
+        router_mock = router_mocker()
+        router_mock.delete_loopback.side_effect = RuntimeError()
+        response = client.post(f"/{self.few}/interfaces/loopback")
+        self.assertEqual(response.status_code, 400)
+        actual = response.json()["data"]
+        self.assertIsNone(actual)

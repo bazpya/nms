@@ -210,7 +210,7 @@ Corresponding to every interaction on that page a CURL command is also generated
 For further development of the API, it would be nice to:
 
 - Have meaningful validation and result messages to explain result of a request.
-- Catching exceptions thrown by lower layers and translating them to appropriate messages.
+- Translate exceptions of the lower layers into appropriate messages.
 - Add user authentication based on Bearer, JWT, etc.
 - Use behavioural testing tools e.g SpecFlow to automate end-to-end test scenarios
 

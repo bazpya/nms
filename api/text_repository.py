@@ -1,11 +1,9 @@
 app_description = {
     "title": "Tiny NMS",
     "description": """
-            I know I haven't had time to do these two properly:
-            * Exception handling
-            * Meaningful response messages
-
-            Having more time, I'd happily add those as well.
+            An Experimental Network Management Tool that
+            allows a minimal set of interactions with network equipment
+            detailed below.
             """,
     "summary": "An Experimental Network Management Tool",
     "version": "0.0.1",
@@ -19,6 +17,7 @@ app_description = {
 
 descriptions = {
     "id": "The unique identifier of the target device in integer format. Use 0 for experimental purposes.",
+    "suffix": "The numerical part in the name of a loopback interface.",
 }
 
 summaries = {
