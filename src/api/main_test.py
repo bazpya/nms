@@ -79,7 +79,7 @@ class Main_Test(TestBase):
         router_mock = router_mocker()
         router_mock.delete_loopback.return_value = expected
         response = client.delete(f"/{self.few}/interfaces/loopback/{self.some}")
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
         actual = response.json()["data"]
         self.assertEqual(actual, expected)
 

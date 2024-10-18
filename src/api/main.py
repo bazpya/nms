@@ -99,7 +99,7 @@ async def delete_interfaces_loopback(
     try:
         remaining_suffixes = router.delete_loopback(suffix)
         return ResponseFactory.make_success(
-            code=204,
+            code=200, # baztodo: Due to some bug in FastApi with Delete responses
             data=remaining_suffixes,
             message="Numerical suffixes of remaining loopback interfaces",
         )
