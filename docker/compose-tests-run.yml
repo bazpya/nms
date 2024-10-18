@@ -1,0 +1,13 @@
+services:
+
+  baz-nms:
+    extends:
+      file: compose-base.yml
+      service: baz-nms
+    command:
+      "python3
+        -m unittest
+          discover
+            -s .
+            -p *_test.py
+      "

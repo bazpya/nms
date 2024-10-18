@@ -1,0 +1,12 @@
+services:
+
+  baz-nms:
+    extends:
+      file: compose-base.yml
+      service: baz-nms
+    command:
+      "uvicorn
+        api.main:app
+        --host 0.0.0.0
+        --reload
+      "

@@ -1,0 +1,15 @@
+services:
+
+  baz-nms:
+    container_name: "baz-nms"
+    image: "baz-nms"
+    build:
+      context: ../src
+    volumes:
+      - ../src:/src
+    ports:
+      - "8000:8000"
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+    env_file:
+      .env

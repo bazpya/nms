@@ -1,10 +1,52 @@
-// {
-//     "version": "2.0.0",
-//     "tasks": [
-//         {
-//             "label": "Export secrets from .env to shell environment",
-//             "type": "shell",
-//             "command": "set -o allexport && source ./.env && set +o allexport"
-//         }
-//     ]
-// }
+{
+    "version": "2.0.0",
+    "tasks": [
+        // ==============================  App  ==============================
+        { // Used in launch.json
+            "label": "app-await-debugger",
+            "type": "shell",
+            "isBackground": true,
+            "command": "docker compose -f ./docker/compose-app-debug.yml up",
+            "presentation": {
+                "panel": "shared",
+                "reveal": "always",
+                "focus": true,
+            },
+        },
+        // ==============================  Tests  ==============================
+        { // Used in launch.json
+            "label": "tests-await-debugger",
+            "type": "shell",
+            "isBackground": true,
+            "command": "docker compose -f ./docker/compose-tests-debug.yml up",
+            "presentation": {
+                "panel": "shared",
+                "reveal": "always",
+                "focus": true,
+            },
+        },
+        // ==============================  Container  ==============================
+        { // Used in launch.json
+            "label": "container-down",
+            "type": "shell",
+            "isBackground": true,
+            "command": "docker compose -f ./docker/compose-base.yml down",
+            "presentation": {
+                "panel": "shared",
+                "reveal": "always",
+                "focus": true,
+            },
+        },
+        {
+            "label": "container-shell",
+            "type": "shell",
+            "isBackground": true,
+            "command": "docker exec -it baz-nms sh",
+            "presentation": {
+                "panel": "shared",
+                "reveal": "always",
+                "focus": true,
+            },
+        },
+    ]
+}

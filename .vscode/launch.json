@@ -1,78 +1,91 @@
 {
     "version": "0.2.0",
     "configurations": [
-        // ==========================  API  ==========================
+        // ==============================  App  ==============================
         {
-            "name": "Run Api",
-            "type": "debugpy",
+            "name": "App Run",
+            "type": "node-terminal",
             "request": "launch",
-            "module": "uvicorn",
-            "args": [
-                "api.main:app",
-                "--reload"
-            ],
-            "jinja": true,
+            "command": "docker compose -f ./docker/compose-app-run.yml up",
             "presentation": {
-                "group": "Api",
+                "group": "1",
+                "order": 1
+            },
+            "postDebugTask": "container-down",
+        },
+        {
+            "name": "App Debug",
+            "type": "debugpy",
+            "request": "attach",
+            "preLaunchTask": "app-await-debugger",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/src",
+                    "remoteRoot": "."
+                }
+            ],
+            "presentation": {
+                "group": "1",
+                "order": 2,
+            },
+            "postDebugTask": "container-down",
+        },
+        // ==============================  Tests  ==============================
+        {
+            "name": "Tests Run",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "docker compose -f ./docker/compose-tests-run.yml up",
+            "presentation": {
+                "group": "2",
+                "order": 1
+            },
+            "postDebugTask": "container-down",
+        },
+        {
+            "name": "Tests Debug",
+            "type": "debugpy",
+            "request": "attach",
+            "preLaunchTask": "tests-await-debugger",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/src",
+                    "remoteRoot": "."
+                }
+            ],
+            "presentation": {
+                "group": "2",
+                "order": 2,
+            },
+            "postDebugTask": "container-down",
+        },
+        // ==============================  Image  ==============================
+        {
+            "name": "Image Build",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "docker image build -f ./docker/Dockerfile . -t baz-nms",
+            "presentation": {
+                "group": "3",
                 "order": 1
             },
         },
         {
-            "name": "Test Api",
-            "type": "debugpy",
+            "name": "Image Delete",
+            "type": "node-terminal",
             "request": "launch",
-            "module": "unittest",
-            "justMyCode": true,
-            "args": [
-                "discover",
-                "-s",
-                "./api",
-                "-p",
-                "*_test.py"
-            ],
+            "command": "docker image rm -f baz-nms",
             "presentation": {
-                "group": "Api",
+                "group": "3",
                 "order": 2
-            },
-        },
-        // ==========================  Engine  ==========================
-        {
-            "name": "Test Engine",
-            // "preLaunchTask": "Export secrets from .env to shell environment",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "unittest",
-            "justMyCode": true,
-            "args": [
-                "discover",
-                "-s",
-                "./engine",
-                "-p",
-                "*_test.py"
-            ],
-            "presentation": {
-                "group": "Engine",
-                "order": 1
-            },
-        },
-        // ==========================  Etc  ==========================
-        {
-            "name": "Test All",
-            "type": "debugpy",
-            "request": "launch",
-            // "cwd": "${workspaceFolder}",
-            "module": "unittest",
-            "justMyCode": true,
-            "args": [
-                "discover",
-                "-s",
-                ".",
-                "-p",
-                "*_test.py"
-            ],
-            "presentation": {
-                "group": "Etc",
-                "order": 1
             },
         },
     ]
