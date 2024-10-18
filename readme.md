@@ -11,12 +11,15 @@ Things that aren't explicitly mentioned, naturally lead to assumtions. But it's 
 
 Components of this project can be launched via CLI independent of any specific development toolset.  
 However, considering the high likelihood of the audience already having VSCode, I have put some launch scripts specific to VSCode in their corresponding folder. So if you navigate to the "Run and Debug" tab in your VSCode you find these handy options:
-- Run Api
-- Test Api
-- Test Engine
-- Test All
+- App Run
+- App Debug
+- Tests Debug
+- Tests Run
+- Image Build
+- Image Delete
 
-If you intend to launch any of the above in a CLI, you can easily take their corresponding command from the launch.json file.
+If you intend to launch any of the above in a CLI, you can easily take their corresponding command from the [launch.json](./.vscode/launch.json) file.
+Similarly there are some task scripts in [tasks.json](./.vscode/tasks.json) which are utilised by the launch scripts.
 
 #### Only target running config
 
@@ -38,7 +41,7 @@ To name a few:
 2- Automated testing of the application logic can be done without all bells and whistles of an end-to-end scenario via api endpoints. This drammatically simplifies and accelerates development.
 3- The API layer is so thin that there's so little to be tested in integration and/or end-to-end scenarios. Those are the most expensive tests in terms of time and complexity. It's best to minimise them.
 
-## 1 Engine
+## 1- Engine
 
 This is where the logic of the application sits. It interacts with network equipment to collect information about their operational status, configuration, etc. and also to remotely modify their configuration.
 
@@ -186,7 +189,7 @@ The reason why some tests have @skip decorator.
 Discuss schema discovery tests.
 Explain local launch in "Run and Debug" of VSCode.
 
-## 2 API
+## 2- API
 
 The API layer, according to best practices explained above, is so thin that it contains no application logic. But there are some aspects of it that need mentioning.
 

@@ -3,9 +3,9 @@ name: Push Event Workflow
 on: push
 
 env:
-  nms_device_url: abcd
+  nms_device_url: dummy
   nms_netconf_port: 830
-  nms_username: abcd
+  nms_username: dummy
   nms_password: 1234
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Packages
-        run: pip install -r requirements.txt
+        run: pip install -r ./src/requirements.txt
 
       - name: Run Tests
-        run: python -m unittest discover -s . -p *_test.py
+        run: python -m unittest discover -s ./src -p *_test.py
